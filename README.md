@@ -1,5 +1,7 @@
 # Meowmeow cat cam meme detector
 
+**Live demo:** https://jhuang165.github.io/meowmeowcatcam/ (once GitHub Pages is enabled — see below)
+
 Point your webcam at yourself, make a face/hand gesture, get a cat meme back in real time. Runs either as a desktop app (OpenCV windows) or entirely in the browser (MediaPipe WASM, no install).
 
 Two windows/panes side by side: 
@@ -56,6 +58,17 @@ python3 -m http.server 8000
 ```
 
 Then open `http://localhost:8000` and allow camera access. Models load from Google's hosted MediaPipe CDN at runtime, so nothing local is needed for the browser version.
+
+## Hosting it on GitHub Pages
+
+The browser version is entirely static (HTML/JS/images, no backend), so GitHub Pages can serve it directly with no build step:
+
+1. On GitHub, go to **Settings → Pages**
+2. Under **Build and deployment**, set **Source** to "Deploy from a branch"
+3. Pick branch **main**, folder **/ (root)**, then **Save**
+4. Wait a minute for the first deploy, then visit `https://<username>.github.io/meowmeowcatcam/`
+
+Camera access requires HTTPS, which Pages provides automatically. A `.nojekyll` file is included so GitHub doesn't run the site through Jekyll (which can mangle filenames with spaces, like the ones in `memes/`).
 
 ## Live debug HUD
 
