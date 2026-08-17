@@ -10,26 +10,27 @@ Two windows/panes side by side:
 
 ## Gestures
 
-Detection first buckets your hand by finger shape (fist vs. pointing vs. open palm, etc.) — those buckets are a genuine precedence, since they're mutually exclusive. *Within* a bucket, close calls (fist vs. thumbsUp, shhh vs. "professor cat", crash-out vs. two-hands-on-head) are scored continuously and decided by whichever reading has the clearest margin, rather than a single hard cutoff — so a pose sitting right on a boundary holds its last confident reading instead of flickering between the two. A pose that's a genuine toss-up between two gestures shows neither until it resolves. Spinning beats everything else, hands included.
+Checked in this order — when a pose could match more than one, the earlier one wins.
 
-| Gesture | How to trigger |
-|---|---|
-| Muehehe | Both hands up, index fingers only, tips touching |
-| Devo cat | Both hands up, above the top of your head |
-| Crash out cord chewing kitty | Both hands up beside your face to hold yummy electrical cable |
-| Thumbs up cat | One hand, thumb stuck out from an otherwise-curled fist, pointing up |
-| I will punch you | One hand, all four fingers curled, thumb tucked in |
-| EHHEHEEEHEEEE | Thumb + pinky out, rockstar cat |
-| Shhh silenced cat | Index finger only, tip resting on your mouth |
-| Erm ackshuALLY! cat | Index finger only, pointing up, held away from your face |
-| Shocked/kidnapped cat | Hand cover mouth |
-| gGIMME MONIE!! | One open palm, all fingers extended, away from your face |
-| Tongue out cat | No hands, mouth open wide |
-| Side eye cat | Turn your head 15°+ either way (real head-pose yaw) |
-| Pokercat | Default |
-| Spinny OIIAI cat | You spin!!!! |
+| # | Gesture | How to trigger |
+|---|---|---|
+| 1 | Muehehe | Both hands up, index fingers only, tips touching |
+| 2 | Devo cat | Both hands up, above the top of your head |
+| 3 | Crash out cord chewing kitty | Both hands up beside your face to hold yummy electrical cable |
+| 4 | Thumbs up cat | One hand, thumb stuck out from an otherwise-curled fist |
+| 5 | I will punch you | One hand, all four fingers curled, thumb tucked in |
+| 6 | EHHEHEEEHEEEE | Thumb + pinky out, rockstar cat |
+| 7 | Shhh silenced cat | Index finger only, tip resting on your mouth |
+| 8 | Erm ackshuALLY! cat | Index finger only, held away from your face |
+| 9 | Shocked/kidnapped cat | Hand cover mouth |
+| 10 | gGIMME MONIE!! | One open palm, all fingers extended, away from your face |
+| 11 | Tongue out cat | No hands, mouth open wide |
+| 12 | Side eye cat | Turn your head 15°+ either way (real head-pose yaw) |
+| 13 | Pokercat | Default |
+| 14 | Spinny OIIAI cat | You spin!!!! |
 
-Meme images live in `memes/`. A couple of gestures pick randomly between multiple images. All the detection thresholds live in `gesture_config.json`, shared by both the desktop and browser versions — see [Live debug HUD](#live-debug-hud) below for tuning them.
+
+Meme images live in `memes/`. A couple of gestures pick randomly between multiple images.
 
 ## Running it — desktop (Python)
 
@@ -88,28 +89,23 @@ Double-click **`Launch Meowmeow Virtual Cam.command`** (or run `python3 gesture_
 
 ## Live debug HUD
 
-The Camera window (desktop) / camera pane (browser) always shows a small readout in the top-left corner. Desktop also adds the optical-flow numbers behind spin detection:
+The Camera window always shows a small readout in the top-left corner:
 
 ```
 gesture: sideEyeCat
 yaw: +18.4 deg  (side-eye thr +/-15.0)
 mouthOpen: 0.04  (tongue-out thr 0.12)
-flow mag: 0.12  (thr 0.80)
-spin fraction (2.2s window): 0.03  (thr 0.55)
-peak score (last 2s): 0.09  <- read this AFTER you stop spinning
-top: shhh=0.71  2nd: oneFingerUp=0.52  margin=0.19 (thr 0.12, floor 0.35)
 ```
 
-That last line is the one to watch when a gesture is triggering too easily, not easily enough, or flickering between two readings: it shows the two closest-scoring hand gestures and the margin between them, straight from `gesture_config.json`. Widen the margin/floor there if a gesture flickers; narrow the specific distance/angle threshold behind it (also in `gesture_config.json`, with a comment on what it controls) if a gesture isn't triggering, or triggers too easily, for your hand/lighting/camera angle. Both the desktop and browser versions read the same file, so a change there applies to both.
+Useful for tuning the detection thresholds at the top of `gesture_meme.py` / `app.js` if a gesture is triggering too easily or not easily enough for your setup/lighting.
 
 ## Project layout
 
 ```
-gesture_meme.py       desktop version (OpenCV + MediaPipe Python tasks API)
-app.js                browser version (MediaPipe tasks-vision WASM)
-gesture_config.json   every tunable threshold, shared by both versions above
-index.html            browser UI shell
-memes/                meme images (+ one video, unused for now)
-models/               MediaPipe .task model files used by the desktop version
-requirements.txt      Python dependencies
+gesture_meme.py   desktop version (OpenCV + MediaPipe Python tasks API)
+app.js            browser version (MediaPipe tasks-vision WASM)
+index.html        browser UI shell
+memes/            meme images (+ one video, unused for now)
+models/           MediaPipe .task model files used by the desktop version
+requirements.txt  Python dependencies
 ```
