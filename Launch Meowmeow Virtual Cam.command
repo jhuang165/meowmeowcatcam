@@ -20,4 +20,4 @@ if [ ! -f .venv/bin/python3 ]; then
     .venv/bin/pip install --quiet -r requirements.txt
 fi
 
-.venv/bin/python3 gesture_meme.py
+.venv/bin/python3 gesture_meme.py --virtual-cam
